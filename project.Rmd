@@ -1,0 +1,30 @@
+
+```{r}
+library(DataCombine)
+library(tidyverse)
+library(lubridate)
+```
+
+
+```{r cars}
+#Preposising data, changing column type, and driping NA, and adding month
+Weather <- read.csv(file = '2020:21 water year.csv')
+
+Weather<-Weather[c("Stn.Id","Stn.Name", "CIMIS.Region", "Date", "Jul", "ETo..in.", "Precip..in.", "Sol.Rad..Ly.day.", "Avg.Vap.Pres..mBars.", "Max.Air.Temp..F.", "Min.Air.Temp..F.", "Avg.Air.Temp..F.", "Max.Rel.Hum....", "Min.Rel.Hum....", "Avg.Rel.Hum....", "Dew.Point..F.", "Avg.Wind.Speed..mph.", "Avg.Soil.Temp..F.")]
+
+Weather <- DropNA(Weather)
+
+WeatherNum <- as.data.frame(apply(carSpeeds[c("Jul", "ETo..in.", "Precip..in.", "Sol.Rad..Ly.day.", "Avg.Vap.Pres..mBars.", "Max.Air.Temp..F.", "Min.Air.Temp..F.", "Avg.Air.Temp..F.", "Max.Rel.Hum....", "Min.Rel.Hum....", "Avg.Rel.Hum....", "Dew.Point..F.", "Avg.Wind.Speed..mph.", "Avg.Soil.Temp..F.")], 2, as.numeric)) 
+
+WeatherChr <- Weather[c("Stn.Id","Stn.Name", "CIMIS.Region", "Date")]
+
+Weather <- cbind(WeatherChr, WeatherNum)
+```
+
+```{r}
+SoilTempLM <- lm(data = WeatherNum, Avg.Soil.Temp..F. ~ . - Sol.Rad..Ly.day.)
+
+summary(SoilTempLM)
+```
+
+```{r}
